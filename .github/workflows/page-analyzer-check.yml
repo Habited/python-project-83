@@ -13,9 +13,11 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install uv
-        uses: snok/install-uv@v3
-        with:
-          cache: 'true'
+        run: |
+          curl -LsSf https://astral.sh/uv/install.sh | sh
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Check uv version
+        run: uv --version
       - name: Install dependencies
         run: 
           make install
