@@ -13,7 +13,7 @@ jobs:
         with:
           python-version: '3.12'
       - name: Install uv
-        uses: astral-sh/uv-action@v1
+        uses: snok/install-uv@v3
         with:
           cache: 'true'
       - name: Install dependencies
