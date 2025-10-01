@@ -1,0 +1,21 @@
+{% extends "index.html" %}
+        {% block new %}
+        <div class="container-lg">
+            <h1>Сайт: {{ urls.name }}</h1>
+            <table class="table">
+                <tr>
+                    <td>ID</td>
+                    <td>{{ urls.id }}</td>
+                </tr>
+                <tr>
+                    <td>Имя</td>
+                    <td>{{ urls.name }}</td>
+                </tr>
+                <tr>
+                    <td>Дата создания</td>
+                    <td>{{ urls.created_at }}</td>
+                </tr>
+            </table>
+        </div>
+        {% endblock %}
+
