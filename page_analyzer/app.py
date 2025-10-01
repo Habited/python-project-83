@@ -1,12 +1,10 @@
 import os
-import validators
-import psycopg2
-from psycopg2.extras import RealDictCursor
-from dotenv import load_dotenv
-from flask import Flask, render_template, request, redirect, flash, url_for
-from validators.domain import domain
-from .tools import DataBase
 
+import validators
+from dotenv import load_dotenv
+from flask import Flask, flash, redirect, render_template, request, url_for
+
+from .tools import DataBase
 
 load_dotenv()
 
@@ -14,6 +12,7 @@ app = Flask(__name__)
 
 app.secret_key = os.getenv("SECRET_KEY")
 db = DataBase(os.getenv("DATABASE_URL"))
+
 
 @app.route("/")
 def index():
