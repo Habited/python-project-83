@@ -35,7 +35,7 @@ def new_url():
     if not valid_url:
         flash("Некорректный URL")
         return redirect("/", code=302)
-    elif url in [url["name"] for url in db.get_all_urls()]:
+    elif url in [url["name"] for url in db.get_table_urls()]:
         flash("Страница уже существует")
         return redirect("/", code=302)        
     db.add_new_url(url, today)
@@ -62,8 +62,6 @@ def show_the_verification_status(url_id):
 
 @app.route("/urls/checks", methods=["POST"])
 def new_ferification_url():
-    id = db.get_url_id()
-    url = db.get_url(id)
     valid_url = True
     if not valid_url:
         flash("Проверка не пройдена")
