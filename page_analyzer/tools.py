@@ -11,7 +11,9 @@ class DataBase:
 
     def get_table_urls(self) -> list[dict]:
         try:
-            self.__cur.execute("SELECT id, name, created_at FROM urls ORDER BY id  DESC;")
+            self.__cur.execute("SELECT id," 
+                               "name," 
+                               "created_at FROM urls ORDER BY id  DESC;")
             urls = self.__cur.fetchall()
             return urls
         except Exception as e:

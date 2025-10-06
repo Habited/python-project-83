@@ -1,9 +1,18 @@
 import os
+from datetime import date
 
 import validators
 from dotenv import load_dotenv
-from flask import Flask, flash, redirect,render_template, request, url_for, get_flashed_messages
-from datetime import date
+from flask import (
+    Flask,
+    flash,
+    get_flashed_messages,
+    redirect,
+    render_template,
+    request,
+    url_for,
+)
+
 from .tools import DataBase
 
 load_dotenv()
@@ -67,12 +76,14 @@ def new_ferification_url():
         flash("Проверка не пройдена")
         return redirect("/status", code=302)    
     flash("Страница успешно проверена")
-    return redirect(url_for("show_the_verification_status", url_id=db.get_url_id()))
+    return redirect(url_for("show_the_verification_status",
+                            url_id=db.get_url_id()))
 
 
 @app.route("/status")
 def show_status():
     render_template()
+
 
 if __name__ == "__main__":
     app.run(debug=True)
