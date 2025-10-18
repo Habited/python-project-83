@@ -1,7 +1,9 @@
 import os
 from datetime import date
 
+import requests
 import validators
+from bs4 import BeautifulSoup
 from dotenv import load_dotenv
 from flask import (
     Flask,
@@ -18,7 +20,6 @@ from .tools import DataBase
 load_dotenv()
 
 app = Flask(__name__)
-
 app.logger.setLevel("INFO")
 app.secret_key = os.getenv("SECRET_KEY")
 db = DataBase(os.getenv("DATABASE_URL"))
@@ -27,62 +28,81 @@ db = DataBase(os.getenv("DATABASE_URL"))
 @app.route("/")
 def index():
     messages = get_flashed_messages()
-    return render_template("index.html", messages=messages)
+    return render_template("index.html",
+                           messages=messages)
 
 
-@app.route("/urls", methods=["GET"])
+@app.route("/urls", methods=["GET", "POST"])
 def show_urls():
-    urls = db.get_table_urls()
-    return render_template("urls.html", urls=urls)
+    messages = get_flashed_messages()
+    if request.method == "GET":
+        urls = db.get_all_urls()
+        app.logger.info(urls)
+        return render_template("urls/urls.html",
+                               urls=urls,
+                               messages=messages)
+    
+    if request.method == "POST":
+        url = request.form.get("url")
+        if not url:
+            flash("URL не может быть пустым")
+            return redirect("/", code=302)
 
-
-@app.route("/urls", methods=["POST"])
-def new_url():
-    url = request.form.get("url")
-    today = date.today()
-    valid_url = validators.url(url)
-    if not valid_url:
-        flash("Некорректный URL")
-        return redirect("/", code=302)
-    elif url in [url["name"] for url in db.get_table_urls()]:
-        flash("Страница уже существует")
-        return redirect("/", code=302)        
-    db.add_new_url(url, today)
-    flash("Корректный URL")
-    return redirect(url_for("show_url", 
-                            url_id=db.get_url_id()))
+        if not validators.url(url):
+            return render_template("urls/errors.html")
+        
+        if db.url_exists(url):
+            existing_id = db.get_url_id_by_name(url)
+            flash("Страница уже существует")
+            return redirect(url_for("show_url", url_id=existing_id))
+                
+        url_id = db.add_new_url(url, date.today())
+        flash("Страница успешно добавлена")
+        return redirect(url_for("show_url", url_id=url_id),
+                        code=302)
 
 
 @app.route("/urls/<int:url_id>")
 def show_url(url_id):
-    url = db.get_url(url_id)
-    app.logger.info(f"{url}")
     messages = get_flashed_messages()
-    return render_template("urls/new.html", url=url, messages=messages)
+    url = db.get_url_by_id(url_id)
+    if not url:
+        return render_template("urls/errors.html")
+    
+    checks = db.get_checks_by_url_id(url_id)
+    return render_template("urls/show.html",
+                           url=url,
+                           url_checks=checks,
+                           messages=messages)
 
 
-@app.route("/urls/<int:url_id>/checks")
-def show_the_verification_status(url_id):
-    id = db.get_url_id()
-    url = db.get_url(id)
-    messages = get_flashed_messages()
-    return render_template("urls/checks.html", url=url, messages=messages)
+@app.route("/urls/<int:url_id>/checks", methods=["POST"])
+def new_verification_url(url_id):
+    url = db.get_url_by_id(url_id)
+    if not url:
+        flash("URL не найден")
+        return redirect(url_for("show_urls"))
 
+    try:
+        response = requests.get(url["name"], timeout=5)
+        response.raise_for_status()
+        status_code = response.status_code
 
-@app.route("/urls/checks", methods=["POST"])
-def new_ferification_url():
-    valid_url = True
-    if not valid_url:
-        flash("Проверка не пройдена")
-        return redirect("/status", code=302)    
-    flash("Страница успешно проверена")
-    return redirect(url_for("show_the_verification_status",
-                            url_id=db.get_url_id()))
+        soup = BeautifulSoup(response.text, 'html.parser')
+        h1 = soup.h1.get_text().strip() if soup.h1 else ''
+        title = soup.title.string.strip() if soup.title else ''
+        
+        description_tag = soup.find('meta', attrs={'name': 'description'})
+        description = description_tag.get(
+            'content', '').strip() if description_tag else ''
 
+        db.add_check(url_id, status_code, h1, title, description, date.today())
+        flash("Страница успешно проверена")
+    except Exception as e:
+        app.logger.error(f"Ошибка проверки URL {url['name']}: {e}")
+        flash("Произошла ошибка при проверке")
 
-@app.route("/status")
-def show_status():
-    render_template()
+    return redirect(url_for("show_url", url_id=url_id))
 
 
 if __name__ == "__main__":

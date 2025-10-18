@@ -4,48 +4,85 @@ from psycopg2.extras import RealDictCursor
 
 class DataBase:
 
-    def __init__(self, DATABASE):
-        self.data_base_url = DATABASE
-        self.__conn = psycopg2.connect(self.data_base_url)
-        self.__cur = self.__conn.cursor(cursor_factory=RealDictCursor)
+    def __init__(self, database_url):
+        self.database_url = database_url
 
-    def get_table_urls(self) -> list[dict]:
-        try:
-            self.__cur.execute("SELECT id," 
-                               "name," 
-                               "created_at FROM urls ORDER BY id  DESC;")
-            urls = self.__cur.fetchall()
-            return urls
-        except Exception as e:
-            print(e)
-            return []
+    def _get_conn(self):
+        return psycopg2.connect(self.database_url)
 
-    def get_url_id(self) -> str:
-        try:
-            self.__cur.execute("SELECT id FROM urls;")
-            url_id = self.__cur.fetchall()[-1]
-            id = url_id['id']
-            return id
-        except Exception as e:
-            print(e)
-            return None
+    def get_all_urls(self) -> list[dict]:
+        with self._get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("""SELECT\
+                            urls.id,\
+                            urls.name,\
+                            url_checks.created_at,\
+                            url_checks.status_code\
+                            FROM urls\
+                            LEFT JOIN url_checks\
+                            ON urls.id = url_checks.url_id\
+                            ORDER BY id DESC;"""
+                            )
+                return cur.fetchall()
+            
+    def url_exists(self, name):
+        with self._get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute("SELECT 1 FROM urls WHERE name = %s", (name,))
+                return cur.fetchone() is not None
 
-    def get_url(self, url_id: int) -> dict:
-        try:
-            self.__cur.execute("SELECT * FROM urls;")
-            url_name = self.__cur.fetchall()[url_id - 1]
-            return url_name
-        except Exception as e:
-            print(e)
-            return dict()
+    def get_url_id_by_name(self, name):
+        with self._get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("SELECT id FROM urls WHERE name = %s", (name,))
+                row = cur.fetchone()
+                return row["id"] if row else None
 
-    def add_new_url(self, value, date) -> bool:
-        try:
-            self.__cur.execute(
-                "INSERT INTO urls (name, created_ad) VALUES (%s, %s);",
-                (value, date))
-            self.__conn.commit()
-            return True
-        except Exception as e:
-            print(e)
-            self.__conn.rollback()
+    def get_url_by_id(self, url_id):
+        with self._get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute("SELECT * FROM urls WHERE id = %s", (url_id,))
+                return cur.fetchone()
+
+    def add_new_url(self, name, created_at):
+        with self._get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(
+                    """INSERT INTO\
+                        urls(name, created_at)\
+                        VALUES (%s, %s) RETURNING id""",
+                        (name, created_at)
+                )
+                return cur.fetchone()["id"]
+
+    def get_checks_by_url_id(self, url_id):
+        with self._get_conn() as conn:
+            with conn.cursor(cursor_factory=RealDictCursor) as cur:
+                cur.execute(
+                    """SELECT * FROM url_checks\
+                    WHERE url_id = %s ORDER BY id DESC;""",
+                    (url_id,)
+                )
+                return cur.fetchall()
+
+    def add_check(self, 
+                  url_id,
+                  status_code,
+                  h1,
+                  title,
+                  description,
+                  created_at):
+        with self._get_conn() as conn:
+            with conn.cursor() as cur:
+                cur.execute("""
+                    INSERT INTO\
+                    url_checks (url_id,\
+                                status_code,\
+                                h1,\
+                                title,\
+                                description,\
+                                created_at)\
+                    VALUES (%s, %s, %s, %s, %s, %s)""",
+                    (url_id, status_code, h1, title, description, created_at))
+
+    

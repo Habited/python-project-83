@@ -21,6 +21,7 @@
           </div>
         </div>
       </nav>
+      {% block futer%}
       <nav class="navbar navbar-expand-md navbar-white bg-warming px-3">
         <div class="container-fluid py-2">
           <div>
@@ -29,14 +30,14 @@
                   {% if message == "Некорректный URL" %}
                   <h3 style="color: rgb(218, 32, 41);">{{ message }}</h3>
                   {% endif %}
-                  {% if message == "Корректный URL" %}
+                  {% if message == "Страница успешно добавлена" %}
                   <h3 style="color: rgb(38, 218, 32);">{{ message }}</h3>
                   {% endif %}
                   {% if message == "Страница уже существует" %}
                   <h3 style="color: rgb(215, 218, 32);">{{ message }}</h3>
                   {% endif %}
-                  {% if message == "Проверка не пройдена" %}
-                  <h3 style="color: rgb(215, 218, 32);">{{ message }}</h3>
+                  {% if message == "Произошла ошибка при проверке" %}
+                  <h3 style="color: rgb(218, 32, 41);">{{ message }}</h3>
                   {% endif %}
                   {% if message == "Страница успешно проверена" %}
                   <h3 style="color: rgb(32, 196, 218);">{{ message }}</h3>
@@ -46,13 +47,15 @@
           </div>
         </div>
       </nav>
+      {% endblock%}
     </header>
     <main class="flex-grow-1">
       <div class="container-lg mt-3">
         <div class="row gx-5">
           <div class="col">
-          {% block main %}
-          {% block new %}
+          {% block errors %}
+          {% block urls %}
+          {% block show %}
           {% block checks %}
             <h1>Анализатор страниц</h1>
             <p>Бесплатно проверяйте сайты на SEO-пригодность</p>
@@ -66,6 +69,7 @@
       </div>
     </main>
   </body>
+    {% endblock %}
     {% endblock %}
     {% endblock %}
     {% endblock %}

@@ -6,9 +6,11 @@ autors = [{name = 'Habited', email = 'pdskate88@gmail.com'}]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
+    "bs4>=0.0.2",
     "flask>=3.1.2",
     "gunicorn>=23.0.0",
     "psycopg2-binary>=2.9.10",
+    "requests>=2.32.5",
     "validators>=0.35.0",
 ]
 

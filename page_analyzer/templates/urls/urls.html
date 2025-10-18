@@ -1,8 +1,8 @@
 {% extends "index.html" %}
-        {% block main %}
+        {% block urls %}
         <div class="container-lg">
             <h1>Сайты</h1>
-            <table class="table">
+            <table class="table" data-test="urls">
                 <thead>
                     <tr>
                         <th scope="col">ID</th>
@@ -16,8 +16,8 @@
                     <tr>
                         <td>{{ url.id }}</td>
                         <td><a href="/urls/{{ url.id }}">{{ url.name }}</a></td>
-                        <td></td>
-                        <td></td>
+                        <td>{{ url.created_at or '' }}</td>
+                        <td>{{ url.status_code or '' }}</a></td>
                     </tr>
                 {% endfor %}
                 </tbody>
