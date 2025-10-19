@@ -49,7 +49,8 @@ def show_urls():
             return redirect("/", code=302)
 
         if not validators.url(url):
-            return render_template("urls/errors.html")
+            flash("Некорректный URL")
+            return redirect("/urls", code=302)
         
         if db.url_exists(url):
             existing_id = db.get_url_id_by_name(url)
@@ -103,7 +104,6 @@ def new_verification_url(url_id):
         flash("Произошла ошибка при проверке")
 
     return redirect(url_for("show_url", url_id=url_id))
-
 
 if __name__ == "__main__":
     app.run(debug=True)
