@@ -105,5 +105,6 @@ def new_verification_url(url_id):
 
     return redirect(url_for("show_url", url_id=url_id))
 
+
 if __name__ == "__main__":
     app.run(debug=True)
