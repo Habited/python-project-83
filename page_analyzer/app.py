@@ -51,7 +51,8 @@ def show_urls():
 
         if not validators.url(url):
             flash("Некорректный URL")
-            return redirect("/urls")
+            return render_template("index.html",
+                           messages=messages), 422
         
         normalized = normalize_url(url)
         
