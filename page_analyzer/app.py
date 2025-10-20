@@ -46,13 +46,11 @@ def show_urls():
     if request.method == "POST":
         url = request.form.get("url")
         if not url:
-            flash("URL не может быть пустым")
-            return redirect("/")
+            return render_template("index.html",
+                                   error="URL не может быть пустым"), 422
 
         if not validators.url(url):
-            flash("Некорректный URL")
-            return render_template("index.html",
-                           messages=messages), 422
+            return render_template("index.html", error="Некорректный URL"), 422
         
         normalized = normalize_url(url)
         
@@ -104,7 +102,8 @@ def new_verification_url(url_id):
         flash("Страница успешно проверена")
     except Exception as e:
         app.logger.error(f"Ошибка проверки URL {url['name']}: {e}")
-        flash("Произошла ошибка при проверке")
+        return render_template("urls/show.html", url=url, 
+                                   error="Произошла ошибка при проверке"), 422
 
     return redirect(url_for("show_url", url_id=url_id))
 

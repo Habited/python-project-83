@@ -3,7 +3,7 @@
 {% block show %}
 <h1>Сайт: {{ url.name }}</h1>
 
-<table class="table table-bordered mt-3 " data-test="url">
+<table class="table table-bordered mt-3 " data-test="urls">
   <tr><td>ID</td><td>{{ url.id }}</td></tr>
   <tr><td>URL</td><td>{{ url.name }}</td></tr>
   <tr><td>Дата создания</td><td>{{ url.created_at.strftime('%d.%m.%Y') }}</td></tr>
@@ -33,7 +33,7 @@
       <td>{{ check.h1 or '' }}</td>
       <td>{{ check.title or '' }}</td>
       <td>{{ check.description or '' }}</td>
-      <td>{{ check.created_at }}</td>
+      <td>{{ check.created_at.strftime('%d.%m.%Y') }}</td>
     </tr>
     {% endfor %}
   </tbody>

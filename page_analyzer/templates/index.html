@@ -22,31 +22,24 @@
         </div>
       </nav>
       {% block futer%}
-      <nav class="navbar navbar-expand-md navbar-white bg-warming px-3">
-        <div class="container-fluid py-2">
-          <div>
+      <div>
+              {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+              {% endif %}
               {% if messages %}
                 {% for message in messages %}
-                  {% if message == "Некорректный URL" %}
-                  <h3 style="color: rgb(218, 32, 41);">{{ message }}</h3>
-                  {% endif %}
                   {% if message == "Страница успешно добавлена" %}
-                  <h3 style="color: rgb(38, 218, 32);">{{ message }}</h3>
+                  <div class="alert alert-success">{{ message }}</div>
                   {% endif %}
                   {% if message == "Страница уже существует" %}
-                  <h3 style="color: rgb(215, 218, 32);">{{ message }}</h3>
-                  {% endif %}
-                  {% if message == "Произошла ошибка при проверке" %}
-                  <h3 style="color: rgb(218, 32, 41);">{{ message }}</h3>
+                  <div class="alert alert-info">{{ message }}</div>
                   {% endif %}
                   {% if message == "Страница успешно проверена" %}
-                  <h3 style="color: rgb(32, 196, 218);">{{ message }}</h3>
+                  <div class="alert alert-info">{{ message }}</div>
                   {% endif %}
                 {% endfor %}
               {% endif %}
           </div>
-        </div>
-      </nav>
       {% endblock%}
     </header>
     <main class="flex-grow-1">
