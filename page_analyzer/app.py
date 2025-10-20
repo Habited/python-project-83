@@ -16,6 +16,7 @@ from flask import (
 )
 
 from .tools import DataBase
+from .util import normalize_url
 
 load_dotenv()
 
@@ -46,21 +47,22 @@ def show_urls():
         url = request.form.get("url")
         if not url:
             flash("URL не может быть пустым")
-            return redirect("/", code=302)
+            return redirect("/")
 
         if not validators.url(url):
             flash("Некорректный URL")
-            return redirect("/urls", code=302)
+            return redirect("/urls")
         
-        if db.url_exists(url):
-            existing_id = db.get_url_id_by_name(url)
+        normalized = normalize_url(url)
+        
+        if db.url_exists(normalized):
+            existing_id = db.get_url_id_by_name(normalized)
             flash("Страница уже существует")
             return redirect(url_for("show_url", url_id=existing_id))
                 
-        url_id = db.add_new_url(url, date.today())
+        url_id = db.add_new_url(normalized, date.today())
         flash("Страница успешно добавлена")
-        return redirect(url_for("show_url", url_id=url_id),
-                        code=302)
+        return redirect(url_for("show_url", url_id=url_id))
 
 
 @app.route("/urls/<int:url_id>")
