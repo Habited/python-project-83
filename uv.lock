@@ -170,6 +170,7 @@ dependencies = [
     { name = "flask" },
     { name = "gunicorn" },
     { name = "psycopg2-binary" },
+    { name = "python-dotenv" },
     { name = "requests" },
     { name = "validators" },
 ]
@@ -178,7 +179,6 @@ dependencies = [
 dev = [
     { name = "black" },
     { name = "pytest" },
-    { name = "python-dotenv" },
     { name = "ruff" },
 ]
 
@@ -188,6 +188,7 @@ requires-dist = [
     { name = "flask", specifier = ">=3.1.2" },
     { name = "gunicorn", specifier = ">=23.0.0" },
     { name = "psycopg2-binary", specifier = ">=2.9.10" },
+    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "requests", specifier = ">=2.32.5" },
     { name = "validators", specifier = ">=0.35.0" },
 ]
@@ -196,7 +197,6 @@ requires-dist = [
 dev = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "pytest", specifier = ">=8.4.1" },
-    { name = "python-dotenv", specifier = ">=1.1.1" },
     { name = "ruff", specifier = ">=0.12.11" },
 ]
 
