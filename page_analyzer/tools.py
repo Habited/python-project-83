@@ -13,16 +13,17 @@ class DataBase:
     def get_all_urls(self) -> list[dict]:
         with self._get_conn() as conn:
             with conn.cursor(cursor_factory=RealDictCursor) as cur:
-                cur.execute("""SELECT\
-                            urls.id,\
-                            urls.name,\
-                            url_checks.created_at,\
-                            url_checks.status_code\
-                            FROM urls\
-                            LEFT JOIN url_checks\
-                            ON urls.id = url_checks.url_id\
-                            ORDER BY id DESC;"""
-                            )
+                cur.execute('''
+        SELECT DISTINCT ON (urls.id)
+            urls.id AS id, 
+            urls.name AS name,
+            url_checks.created_at  AS created_at,
+            url_checks.status_code AS status_code
+        FROM urls
+        LEFT JOIN url_checks ON 
+            urls.id = url_checks.url_id
+        ORDER BY id DESC;
+        ''')
                 return cur.fetchall()
             
     def url_exists(self, name):
