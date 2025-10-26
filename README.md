@@ -1,9 +1,10 @@
 # Проект page_analyzer 
 
-Проект page_analyzer разработан для анализа urls адресов.
+# Проект page_analyzer разработан для анализа urls адресов.
 
 [![Actions Status](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Habited/python-project-83/actions)
-[![SonarCloud](https://sonarcloud.io/images/project_badges/sonarcloud-orange.svg)](https://sonarcloud.io/summary/new_code?id=python-project-83)
+[![hexlet-check](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Habited_python-project-83&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Habited_python-project-83)
 
 ## Содержание
 
@@ -12,7 +13,7 @@
 - [Установка](#-установка)
 - [Конфигурация](#-конфигурация)
 - [Лицензия](#-лицензия)
-- [Ссылка на сайт "Анализатор страниц"](#-Ссылка на сайт "Анализатор страниц")
+- [Ссылка на сайт 'Анализатор страниц'](#-'Анализатор-страниц')
 - [Контакты](#-контакты)
 
 ## Основные возможности
@@ -43,5 +44,5 @@
 https://python-project-83-6ly6.onrender.com
 
 ## Контакты
-Автор: Habited
-Github: @Habited
+- Автор: Habited
+- Github: @Habited
