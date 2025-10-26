@@ -100,19 +100,18 @@ def show_url(url_id):
 @app.route("/urls/<int:url_id>/checks", methods=["POST"])
 def new_verification_url(url_id):
     url = db.get_url_by_id(url_id)
-    status_code, h1, title, description = parser(url)
     if not url:
         flash("URL не найден")
         return redirect(url_for("show_urls"))
 
     try:
-        db.add_check(url_id, status_code, h1, title, description, date.today())
-        flash("Страница успешно проверена")
+        status_code, h1, title, description = parser(url)
     except Exception as e:
         app.logger.error(f"Ошибка проверки URL {url['name']}: {e}")
         return render_template("urls/show.html", url=url, 
                                    error="Произошла ошибка при проверке"), 422
-
+    db.add_check(url_id, status_code, h1, title, description, date.today())
+    flash("Страница успешно проверена")
     return redirect(url_for("show_url", url_id=url_id))
 
 
