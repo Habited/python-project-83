@@ -1,9 +1,8 @@
 # Проект page_analyzer 
 
-# Проект page_analyzer разработан для анализа urls адресов.
+### Проект page_analyzer разработан для анализа urls адресов.
 
 [![Actions Status](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Habited/python-project-83/actions)
-[![hexlet-check](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml/badge.svg)](https://github.com/Habited/python-project-83/actions/workflows/hexlet-check.yml)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=Habited_python-project-83&metric=sqale_rating)](https://sonarcloud.io/summary/new_code?id=Habited_python-project-83)
 
 ## Содержание
@@ -23,7 +22,7 @@
 
 ## Технологии
 
-- **Язык**: Python 3.12
+- **Язык**: Python 3.12, HTML
 - **Фреймворки**: Flask
 - **Инструменты**: PostgreSQL, urllib3, ruff, python-dotenv, validators, bs4, psycorg2, requests, uv
 
